@@ -1,254 +1,265 @@
 openapi: 3.0.9
 info:
- title: Students WebAPI
- version: 1.0.0
+  title: Students WebAPI
+  version: 1.0.0
 tags:
- - name: App
-   description: Used by students app
- - name: Business
-   description: Used by business app
- - name: School
-   description: Used by schools app
- - name: Admin
-   description: Used only by admins
- - name: Student
-   description: Student resource
- - name: Validation request
-   description: Validation request resource
+  - name: App
+    description: Used by students app
+  - name: Business
+    description: Used by business app
+  - name: Institution
+    description: Used by institutions app
+  - name: Admin
+    description: Used only by admins
+  - name: Student
+    description: Student resource
+  - name: Validation request
+    description: Validation request resource
 
 paths:
- /students:
-   get:
-     summary: Fetch all students
-     tags:
-       - Admin
-     responses:
-       '200':
-         description: Students list
-         content:
-           application/json:
-             schema:
-               type: array
-               items:
-                 $ref: '#/components/schemas/Student'
+  /students:
+    get:
+      summary: Fetch all students
+      tags:
+        - Admin
+      responses:
+        "200":
+          description: Students list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
 
-   post:
-     summary: 'Register a new student'
-     tags:
-       - App
-       - Student
-     requestBody:
-       content:
-         'application/json':
-           schema:
-             $ref: '#/components/schemas/Student'
-     responses:
-       '201':
-         description: Student created
-         content:
-           'application/json':
-             schema:
-               $ref: '#/components/schemas/Entity'
-       '404':
-         description: Education offer not found
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: 'Offer not found'
-       '409':
-         description: Student already exists
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: 'Student already exists'
+    post:
+      summary: "Register a new student"
+      tags:
+        - App
+        - Student
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        "201":
+          description: Student created
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/Entity"
+        "404":
+          description: Education offer not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Offer not found"
+        "409":
+          description: Student already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: "Student already exists"
 
- /students/{id}:
-   parameters:
-     - name: id
-       in: path
-       required: true
-       schema:
-         type: string
-         format: uuid
-   get:
-     summary: Fetch student's data
-     tags:
-       - App
-       - Business
-       - School
-       - Student
-     responses:
-       '200':
-         description: Found student
-         content:
-           application/json:
-             schema:
-               $ref: '#/components/schemas/Student'
-      
-       '404':
-         description: Student not found
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: Student not found
+  /students/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Fetch student's data
+      tags:
+        - App
+        - Business
+        - Institution
+        - Student
+      responses:
+        "200":
+          description: Found student
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
 
-   post:
-     summary: Update student's data
-     tags:
-       - App
-     requestBody:
-       content:
-         application/json:
-           schema:
-             $ref: '#/components/schemas/Student'
-     responses:
-       '200':
-         description: Student updated
-         content:
-           application/json:
-             schema:
-               $ref: '#/components/schemas/Student'
-       '404':
-         description: Student not found
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: Student not found
+        "404":
+          description: Student not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Student not found
 
- /validation-requests/{id}:
-   parameters:
-     - name: id
-       in: path
-       required: true
-       schema:
-         type: string
-         format: uuid
+    post:
+      summary: Update student's data
+      tags:
+        - App
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Student"
+      responses:
+        "200":
+          description: Student updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+        "404":
+          description: Student not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Student not found
 
-   get:
-     summary: Fetch validation request of student
-     tags:
-       - App
-       - School
-       - Validation request
-     responses:
-       '200':
-         description: Found validation
-         content:
-           application/json:
-             schema:
-               $ref: "#/components/schemas/ValidationRequest"
-       '404':
-         description: Validation request not found
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: Validation request not found
-   post:
-     summary: Validate request
-     tags:
-       - School
-       - Validation request
-     requestBody:
-       content:
-         application/json:
-           schema:
-             $ref: "#/components/schemas/ValidationRequest"
-     responses:
-       '200':
-         description: Request validated
-         content:
-           application/json:
-             schema:
-               $ref: "#/components/schemas/ValidationRequest"
-       '404':
-         description: Validation request not found
-         content:
-           application/json:
-             schema:
-               type: object
-               properties:
-                 msg:
-                   type: string
-                   example: Validation request not found
+  /validation-requests/{studentId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Fetch validation request of student
+      tags:
+        - App
+        - Institution
+        - Validation request
+      responses:
+        "200":
+          description: Found validation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationRequest"
+        "404":
+          description: Validation request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Validation request not found
+
+    post:
+      summary: Validate request
+      tags:
+        - Institution
+        - Validation request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is-valid:
+                  type: boolean
+      responses:
+        "200":
+          description: Request validated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationRequest"
+        "404":
+          description: Validation request not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Validation request not found
 
 components:
- schemas:
-   Entity:
-     type: object
-     properties:
-       id:
-         type: string
-         format: uuid
-         readOnly: true
+  schemas:
+    Entity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
 
-   Student:
-     allOf:
-       - $ref: '#/components/schemas/Entity'
-       - type: object
-         properties:
-           full-name:
-             type: string
-             example: 'Yomha, Laureano Nicolás'
-           dni:
-             type: string
-             format: regex
-             pattern: '[0-9]{8}'
-             example: 46113570
-           graduation-year:
-             type: number
-             example: 2023
-           education-offer:
-             type: object
-             properties:
-               id:
-                 type: string
-                 format: uuid
-               name:
-                 type: string
-                 example: Técnico Programador
-                 readOnly: true
-               school:
-                 type: object
-                 readOnly: true
-                 properties:
-                   id:
-                     type: string
-                     format: uuid
-                   name:
-                     type: string
-                     example: EEST N°2
+    Student:
+      allOf:
+        - $ref: "#/components/schemas/Entity"
+        - type: object
+          properties:
+            full-name:
+              type: string
+              example: "Yomha, Laureano Nicolás"
+            dni:
+              type: string
+              format: regex
+              pattern: "[0-9]{8}"
+              example: 46113570
+            graduation-year:
+              type: number
+              example: 2023
+            education-offer:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                  example: Técnico Programador
+                  readOnly: true
+                institution:
+                  type: object
+                  readOnly: true
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    name:
+                      type: string
+                      example: EEST N°2
 
-   ValidationRequest:
-     allOf:
-       - $ref: "#/components/schemas/Entity"
-       - type: object
-         properties:
-           createdAt:
-             type: string
-             format: timedate
-             readOnly: true
-           gotValidated:
-             type: boolean
-             readOnly: true
-           isValid:
-             type: boolean
+    ValidationRequest:
+      type: object
+      properties:
+        created-at:
+          type: string
+          format: timedate
+          readOnly: true
+        is-validated:
+          type: boolean
+          readOnly: true
+        validated-at:
+          type: string
+          format: timedate
+          readOnly: true
+          nullable: true
+        is-valid:
+          type: boolean
+          nullable: true
+        student:
+          $ref: "#/components/schemas/Student"
+          readOnly: true

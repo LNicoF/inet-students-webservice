@@ -8,18 +8,8 @@ const get = (id) =>
   new Promise(async (resolve) => {
     const connection = await getConnection();
     connection.query(
-      `select * from ?? inner join ?? on ??.?? = ??.?? where ??.?? = ?`,
-      [
-        entityTable,
-        roleTable,
-        roleTable,
-        idColumn,
-        entityTable,
-        idColumn,
-        roleTable,
-        idColumn,
-        id,
-      ],
+      `select * from ?? as a inner join ?? as b on a.?? = b.?? where a.?? = ?`,
+      [ entityTable, roleTable, idColumn, idColumn, idColumn, id ],
       (err, result) => {
         if (err) throw err;
         resolve(result[0] ?? null);
